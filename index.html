@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<head>
+    <title>taste</title>
+    <script src="https://fb.me/react-0.13.3.js"></script>
+    <script src="https://fb.me/JSXTransformer-0.13.3.js"></script>
+    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+</head>
+<body>
+    <div id="content"></div>
+    <script type="text/jsx">
+
+        var access_token = location.hash.split('=')[1]; //hacky as fuck
+        console.log(access_token);
+
+        var MainView = React.createClass({
+            render: function () {
+                if (!access_token)
+                    return (
+                            <a href="http://localhost:8080/login">Login</a>
+                    );
+                else
+                    return (
+                            <Visualizer></Visualizer>
+                    );
+            }
+        });
+
+        var Visualizer = React.createClass({
+            render: function () {
+                $.ajax({
+                    url: 'http://localhost:8080/fetch',
+                    //dataType: 'json',
+                    type: 'GET',
+                    success: function (data) {
+                        console.log(data);
+                    }.bind(this),
+                    error: function(xhr, status, err) {
+                        console.error(status, err.toString());
+                    }.bind(this)
+                });
+                return (
+                        <div className="visualizer">
+                            <h1>the viz</h1>
+                        </div>
+                );
+            }
+        });
+
+        React.render(
+                <MainView></MainView>,
+                document.getElementById('content')
+        );
+    </script>
+</body>
